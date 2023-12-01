@@ -1,8 +1,12 @@
-import React from 'react';
+import FeaturedProducts from '../components/FeaturedProducts';
+import Hero from '../components/Hero';
 
 function Home() {
   return (
-    <div>Home</div>
+    <main>
+      <Hero />
+      <FeaturedProducts />
+    </main>
   )
 }
 

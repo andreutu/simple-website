@@ -1,30 +1,28 @@
 import { Link } from 'react-router-dom';
 import { FaBars } from "react-icons/fa";
+import { links } from '../utils/constants';
 
 import styled from 'styled-components';
 
 import homeIcon from "../assets/home.svg";
-import { useContext } from 'react';
-import { ProductsContext } from '../context/ProductsContext';
+import { useProductsContext } from '../context/ProductsContext';
 
-type Props = {
-  handleOpenSidebar: () => void;
-}
-
-function Navbar({ handleOpenSidebar }: Props) {
-  const { openSidebar } = useContext(ProductsContext);
+function Navbar() {
+  const { openSidebar } = useProductsContext();
 
   return (
     <NavContainer>
       <div className="nav-center">
         <div className="nav-header">
           <Link to="/"><img src={homeIcon}></img></Link>
-          {openSidebar ? <button type="button" className="nav-toggle" onClick={() => openSidebar()}><FaBars /></button> : null}
+          {openSidebar && <button type="button" className="nav-toggle" onClick={() => openSidebar()}><FaBars /></button>}
         </div>
 
         <ul className="nav-links">
-          <li><Link to="/about">About</Link></li>
-          <li><Link to="/products">Products</Link></li>
+          {links.map((link) => {
+            const { id, text, url } = link;
+            return <li key={id}><Link to={url}>{text.toUpperCase()}</Link></li>;
+          })}
         </ul>
       </div>
 
