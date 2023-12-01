@@ -1,17 +1,23 @@
-import React, { ReactNode, createContext, useReducer, Reducer } from 'react';
+import React, { ReactNode, createContext, useReducer, Reducer, Dispatch } from 'react';
 import { SIDEBAR_OPEN, SIDEBAR_CLOSE } from "../actions.ts";
 
 type StateType = { isSidebarOpen: boolean };
 type ActionType = { type: string, payload?: string };
 
 interface IContextProps {
-  isSidebarOpen: boolean;
-  openSidebar: () => void
-  closeSidebar: () => void
+  state: StateType;
+  dispatch: Dispatch<ActionType>;
+  openSidebar: () => void;
+  closeSidebar: () => void;
 }
 
 const initialState: StateType = { isSidebarOpen: false };
-export const ProductsContext = createContext<IContextProps | null>(null);
+export const ProductsContext = createContext<IContextProps>({
+  state: initialState,
+  dispatch: () => null,
+  openSidebar: () => null,
+  closeSidebar: () => null
+});
 
 function reducer(state: StateType, action: ActionType) {
   switch (action.type) {
@@ -36,7 +42,7 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
     dispatch({ type: SIDEBAR_CLOSE });
   }
 
-  return <ProductsContext.Provider value={{ ...state, openSidebar, closeSidebar }}>
+  return <ProductsContext.Provider value={{ state, dispatch, openSidebar, closeSidebar }}>
     {children}
   </ProductsContext.Provider>
 };
