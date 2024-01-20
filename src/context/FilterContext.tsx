@@ -118,11 +118,11 @@ function reducer(state: DataType, action: ActionType) {
       }
 
       if (sort === "name-a") {
-        tempProducts = tempProducts.sort((a, b) => a.name.localCompare(b.name));
+        tempProducts = tempProducts.sort((a, b) => a.name.localeCompare(b.name));
       }
 
       if (sort === "name-z") {
-        tempProducts = tempProducts.sort((a, b) => b.name.localCompare(a.name));
+        tempProducts = tempProducts.sort((a, b) => b.name.localeCompare(a.name));
       }
 
       return { ...state, filtered_products: tempProducts };

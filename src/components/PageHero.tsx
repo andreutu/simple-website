@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-const PageHero = ({ title, product }: {title: string, product?: any[]}) => {
+const PageHero = ({ title, product }: {title: string, product?: any}) => {
   return (
     <Wrapper>
       <div className="section-center">
