@@ -6,7 +6,13 @@ import Error from './Error';
 import Loading from './Loading';
 
 function FeaturedProducts() {
-  const { state: { products_loading: loading, products_error: error, products: products } } = useProductsContext();
+  const {
+    state: {
+      products_loading: loading,
+      products_error: error,
+      featured_products: featuredProducts
+    }
+  } = useProductsContext();
   
   if (loading) {
     return <Loading />
@@ -24,7 +30,7 @@ function FeaturedProducts() {
       </div>
 
       <div className="section-center featured">
-        {products.map((product) => {
+        {featuredProducts.slice(0, 3).map((product) => {
           const { id, name, price, image } = product;
           return <Product id={id} key={id} price={price} name={name} image={image} />
         })}

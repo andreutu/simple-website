@@ -1,25 +1,39 @@
-import { ReactNode, createContext, useContext, useReducer, Reducer, Dispatch, useEffect } from 'react';
-import { SIDEBAR_OPEN, SIDEBAR_CLOSE, GET_PRODUCTS_BEGIN, GET_PRODUCTS_SUCCESS, GET_PRODUCTS_ERROR } from "../utils/actions.ts";
-import axios from 'axios';
-import { products_url } from '../utils/constants.ts';
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useReducer,
+  Reducer,
+  Dispatch,
+  useEffect,
+} from "react";
+import {
+  SIDEBAR_OPEN,
+  SIDEBAR_CLOSE,
+  GET_PRODUCTS_BEGIN,
+  GET_PRODUCTS_SUCCESS,
+  GET_PRODUCTS_ERROR,
+} from "../utils/actions.ts";
+import axios from "axios";
+import { products_url } from "../utils/constants.ts";
 
 type StateType = {
-  isSidebarOpen: boolean
+  isSidebarOpen: boolean;
 
-  products_loading: boolean
-  products_error: boolean
-  products: any[]
+  products_loading: boolean;
+  products_error: boolean;
+  products: any[];
 
-  featured_products: any[]
+  featured_products: any[];
 
-  single_product_loading: boolean
-  single_product_error: boolean
-  single_product: {}
+  single_product_loading: boolean;
+  single_product_error: boolean;
+  single_product: {};
 };
 
 type ActionType = {
-  type: string
-  payload?: any
+  type: string;
+  payload?: any;
 };
 
 interface IContextProps {
@@ -37,7 +51,7 @@ const initialState: StateType = {
   featured_products: [],
   single_product_loading: false,
   single_product_error: false,
-  single_product: {}
+  single_product: {},
 };
 
 function reducer(state: StateType, action: ActionType) {
@@ -49,7 +63,15 @@ function reducer(state: StateType, action: ActionType) {
     case GET_PRODUCTS_BEGIN:
       return { ...state, products_loading: true };
     case GET_PRODUCTS_SUCCESS:
-      return { ...state, products_loading: false, products: action.payload };
+      const featured_products = action.payload.filter(
+        (element: any) => element.featured === true
+      );
+      return {
+        ...state,
+        products: action.payload,
+        products_loading: false,
+        featured_products: featured_products,
+      };
     case GET_PRODUCTS_ERROR:
       return { ...state, products_loading: false, products_error: true };
     default:
@@ -61,14 +83,21 @@ export const ProductsContext = createContext<IContextProps>({
   state: initialState,
   dispatch: () => null,
   openSidebar: () => null,
-  closeSidebar: () => null
+  closeSidebar: () => null,
 });
 
 export const ProductsProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer<Reducer<StateType, ActionType>>(reducer, initialState);
+  const [state, dispatch] = useReducer<Reducer<StateType, ActionType>>(
+    reducer,
+    initialState
+  );
 
-  function openSidebar(): void { dispatch({ type: SIDEBAR_OPEN }); }
-  function closeSidebar(): void { dispatch({ type: SIDEBAR_CLOSE }); }
+  function openSidebar(): void {
+    dispatch({ type: SIDEBAR_OPEN });
+  }
+  function closeSidebar(): void {
+    dispatch({ type: SIDEBAR_CLOSE });
+  }
 
   async function fetchProducts(url: string) {
     dispatch({ type: GET_PRODUCTS_BEGIN });
@@ -86,11 +115,15 @@ export const ProductsProvider = ({ children }: { children: ReactNode }) => {
     fetchProducts(products_url);
   }, []);
 
-  return <ProductsContext.Provider value={{ state, dispatch, openSidebar, closeSidebar }}>
-    {children}
-  </ProductsContext.Provider>
+  return (
+    <ProductsContext.Provider
+      value={{ state, dispatch, openSidebar, closeSidebar }}
+    >
+      {children}
+    </ProductsContext.Provider>
+  );
 };
 
 export const useProductsContext = () => {
   return useContext(ProductsContext);
-}
+};

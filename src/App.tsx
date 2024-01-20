@@ -2,8 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Home, About, Products, SingleProduct, Error } from "./pages";
 import { Navbar, Sidebar, Footer } from './components';
 
-import './css/App.css';
-
 function App() {
   return (
     <Router>
